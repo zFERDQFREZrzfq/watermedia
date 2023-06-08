@@ -17,9 +17,9 @@
  * Copyright 2009-2019 Caprica Software Limited.
  */
 
-package me.lib720.caprica.vlcj4.player.embedded.videosurface.callback;
+package me.lib720.caprica.vlcj.player.embedded.videosurface.callback;
 
-import me.lib720.caprica.vlcj4.player.embedded.videosurface.CallbackVideoSurface;
+import me.lib720.caprica.vlcj.player.embedded.videosurface.CallbackVideoSurface;
 
 /**
  * Callback invoked by the {@link CallbackVideoSurface} when the format of the video changes.
