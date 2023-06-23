@@ -244,8 +244,8 @@ public enum VLCArchives {
 
     static void init(Path rootDir) { rootVLC = rootDir; }
     static void clear() { MediaUtil.deleteFrom(rootVLC.toAbsolutePath().toString()); }
-    static String getLocalVersion() { return MediaUtil.readFrom(rootVLC.toAbsolutePath()); }
-    static String getVersion() { return "3.0.18"; }
+    static String getLocalVersion() { return MediaUtil.readFrom(rootVLC.resolve("version.cfg").toAbsolutePath()); }
+    static String getVersion() { return "3.0.18a"; }
 
     private enum ResFileType {
         LUAC("/vlc/lua", ".luac"),
