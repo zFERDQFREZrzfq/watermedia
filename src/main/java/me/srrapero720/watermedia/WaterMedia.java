@@ -20,7 +20,7 @@ public class WaterMedia {
 	}
 
 	public static boolean load(Path gameDir) {
-		// PREPARE API
+		// PRE INIT
 		if (!AbstractURLPatch.init()) return false;
 		if (!CacheStorage.init(gameDir)) return false;
 
