@@ -67,7 +67,6 @@ public enum VLCArchives {
     libpng_plugin(ResFileType.BIN, "codec"),
     libqsv_plugin(ResFileType.BIN, "codec"),
     librawvideo_plugin(ResFileType.BIN, "codec"),
-    librtp_rawvid_plugin(ResFileType.BIN, "codec"),
     librtpvideo_plugin(ResFileType.BIN, "codec"),
     libschroedinger_plugin(ResFileType.BIN, "codec"),
     libscte18_plugin(ResFileType.BIN, "codec"),
