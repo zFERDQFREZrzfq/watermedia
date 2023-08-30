@@ -196,6 +196,22 @@ public enum VLCBinaries {
     libmux_ts_plugin(Type.BIN, "mux"),
     libmux_wav_plugin(Type.BIN, "mux"),
 
+    // plugins/packetizer
+    libpacketizer_a52_plugin(Type.BIN, "packetizer"),
+    libpacketizer_av1_plugin(Type.BIN, "packetizer"),
+    libpacketizer_copy_plugin(Type.BIN, "packetizer"),
+    libpacketizer_dirac_plugin(Type.BIN, "packetizer"),
+    libpacketizer_dts_plugin(Type.BIN, "packetizer"),
+    libpacketizer_flac_plugin(Type.BIN, "packetizer"),
+    libpacketizer_h264_plugin(Type.BIN, "packetizer"),
+    libpacketizer_hevc_plugin(Type.BIN, "packetizer"),
+    libpacketizer_mlp_plugin(Type.BIN, "packetizer"),
+    libpacketizer_mpeg4audio_plugin(Type.BIN, "packetizer"),
+    libpacketizer_mpeg4video_plugin(Type.BIN, "packetizer"),
+    libpacketizer_mpegaudio_plugin(Type.BIN, "packetizer"),
+    libpacketizer_mpegvideo_plugin(Type.BIN, "packetizer"),
+    libpacketizer_vc1_plugin(Type.BIN, "packetizer"),
+
     // plugins/spu
     liblogo_plugin(Type.BIN,"spu"),
     libmarq_plugin(Type.BIN,"spu"),
