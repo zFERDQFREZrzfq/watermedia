@@ -36,8 +36,9 @@ public class VideoLAN {
         var path = workingDir.resolve("vlc/");
 
         // LOGGER INIT
-        if (!Files.exists(logs.toAbsolutePath())) if (logs.getParent().toFile().mkdirs()) LOGGER.info(IT, "Logger dir created");
-        else compressAndDeleteLogFile(logs);
+        if (!Files.exists(logs.toAbsolutePath())) {
+            if (logs.getParent().toFile().mkdirs()) LOGGER.info(IT, "Logger dir created");
+        } else compressAndDeleteLogFile(logs);
 
         // INIT
         CustomDirectoryProvider.init(path);
