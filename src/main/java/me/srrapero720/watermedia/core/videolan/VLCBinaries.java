@@ -22,35 +22,37 @@ public enum VLCBinaries {
     libhttp_plugin(Type.BIN, "access"),
     libhttps_plugin(Type.BIN, "access"),
     libimem_plugin(Type.BIN, "access"),
+    libtcp_plugin(Type.BIN, "access"),
+    libudp_plugin(Type.BIN, "access"),
 
     // plugins/audio_filter
+    libaudio_format_plugin(Type.BIN, "audio_filter"),
+    libaudiobargraph_a_plugin(Type.BIN, "audio_filter"),
+    libchorus_flanger_plugin(Type.BIN, "audio_filter"),
+    libcompressor_plugin(Type.BIN, "audio_filter"),
+    libdolby_surround_decoder_plugin(Type.BIN, "audio_filter"),
     libequalizer_plugin(Type.BIN, "audio_filter"),
     libgain_plugin(Type.BIN, "audio_filter"),
+    libheadphone_channel_mixer_plugin(Type.BIN, "audio_filter"),
+    libkaraoke_plugin(Type.BIN, "audio_filter"),
+    libmad_plugin(Type.BIN, "audio_filter"),
+    libmono_plugin(Type.BIN, "audio_filter"),
+    libnormvol_plugin(Type.BIN, "audio_filter"),
+    libparam_eq_plugin(Type.BIN, "audio_filter"),
+    libremap_plugin(Type.BIN, "audio_filter"),
+    libsamplerate_plugin(Type.BIN, "audio_filter"),
     libscaletempo_pitch_plugin(Type.BIN, "audio_filter"),
     libscaletempo_plugin(Type.BIN, "audio_filter"),
-    libtospdif_plugin(Type.BIN, "audio_filter"),
-    libugly_resampler_plugin(Type.BIN, "audio_filter"),
-    libmad_plugin(Type.BIN, "audio_filter"),
-    libnormvol_plugin(Type.BIN, "audio_filter"),
-    libaudio_format_plugin(Type.BIN, "audio_filter"),
-    libstereo_widen_plugin(Type.BIN, "audio_filter"),
-    libdolby_surround_decoder_plugin(Type.BIN, "audio_filter"),
-    libspatialaudio_plugin(Type.BIN, "audio_filter"),
-    libtrivial_channel_mixer_plugin(Type.BIN, "audio_filter"),
-    libchorus_flanger_plugin(Type.BIN, "audio_filter"),
-    libspatializer_plugin(Type.BIN, "audio_filter"),
-    libheadphone_channel_mixer_plugin(Type.BIN, "audio_filter"),
-    libremap_plugin(Type.BIN, "audio_filter"),
-    libcompressor_plugin(Type.BIN, "audio_filter"),
-    libmono_plugin(Type.BIN, "audio_filter"),
-    libaudiobargraph_a_plugin(Type.BIN, "audio_filter"),
-    libspeex_resampler_plugin(Type.BIN, "audio_filter"),
     libsimple_channel_mixer_plugin(Type.BIN, "audio_filter"),
-    libkaraoke_plugin(Type.BIN, "audio_filter"),
-    libsamplerate_plugin(Type.BIN, "audio_filter"),
-    libparam_eq_plugin(Type.BIN, "audio_filter"),
+    libspatialaudio_plugin(Type.BIN, "audio_filter"),
+    libspatializer_plugin(Type.BIN, "audio_filter"),
+    libspeex_resampler_plugin(Type.BIN, "audio_filter"),
+    libstereo_widen_plugin(Type.BIN, "audio_filter"),
+    libtospdif_plugin(Type.BIN, "audio_filter"),
+    libtrivial_channel_mixer_plugin(Type.BIN, "audio_filter"),
+    libugly_resampler_plugin(Type.BIN, "audio_filter"),
 
-    // plugins/audio_output
+    // plugins/audio_mixer
     libfloat_mixer_plugin(Type.BIN, "audio_mixer"),
     libinteger_mixer_plugin(Type.BIN, "audio_mixer"),
 
@@ -181,6 +183,7 @@ public enum VLCBinaries {
 
     // plugins/misc
     libgnutls_plugin(Type.BIN, "misc"),
+    libxml_plugin(Type.BIN, "misc"),
 
     // plugins/mux
     libmux_asf_plugin(Type.BIN, "mux"),
@@ -310,7 +313,7 @@ public enum VLCBinaries {
     static void cleanup() { Util.deleteFrom(rootVLC.toAbsolutePath().toString()); }
     static void extractAll() { for (VLCBinaries bin: VLCBinaries.values()) bin.extract(); }
     static String installedVersion() { return Util.readFrom(rootVLC.resolve("version.cfg").toAbsolutePath()); }
-    static String resVersion() { return "3.0.18"; }
+    static String resVersion() { return "3.0.18a"; }
 
     enum Type {
         LUAC("/vlc/lua", ".luac"),
