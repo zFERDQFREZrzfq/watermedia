@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 public final class WaterMediaAPI {
     private static final Marker IT = MarkerFactory.getMarker("WaterMediaAPI");
     public static final RenderablePicture LOADING_GIF = new RenderablePicture(Util.getGifFromResources("/images/loading.gif"));
@@ -101,16 +102,23 @@ public final class WaterMediaAPI {
      * @return a PlayerFactory to create custom VLC players. {@link VideoPlayer} can accept factory for new instances
      */
     public static MediaPlayerFactory createVLCFactory(String[] vlcArgs) {
-        var discovery = new NativeDiscovery();
-        if (discovery.discover()) {
-            var factory = new MediaPlayerFactory(discovery, vlcArgs);
-            LOGGER.info(IT, "New instance of VLC loaded from '{}' with the next args:\n{}", discovery.discoveredPath(), Arrays.toString(vlcArgs));
+        if (DISCOVERY.discover()) {
+            var factory = new MediaPlayerFactory(DISCOVERY, vlcArgs);
+            LOGGER.info(IT, "New instance of VLC loaded from '{}' with the next args:\n{}", DISCOVERY.discoveredPath(), Arrays.toString(vlcArgs));
             Runtime.getRuntime().addShutdownHook(new Thread(factory::release));
             return factory;
         }
 
         LOGGER.error(IT, "VLC was not found on your system.");
         return null;
+    }
+
+    /**
+     * Returns default VLC factory created by WATERMeDIA
+     * @return MediaPlayerFactory instance
+     */
+    public static MediaPlayerFactory getVLCFactory() {
+        return VideoLAN.factory();
     }
 
     /**

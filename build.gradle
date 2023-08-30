@@ -30,6 +30,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', modid
+            property 'terminal.jline', 'true'
 
 //            arg '--mixin.config'
 //            arg 'watermedia.mixin.json'

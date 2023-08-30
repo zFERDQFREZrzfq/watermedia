@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 // This class comes from WATERCoRE and isn't sync with WATERCoRE main project
+@Deprecated
 public class ThreadUtil {
     private static int workers = 0;
     private static Thread THREADLG = null;

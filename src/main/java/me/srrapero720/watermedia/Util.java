@@ -49,17 +49,9 @@ public class Util {
      * @return a InputStream with the file.
      */
     public static InputStream resourceAsStream(String path, ClassLoader classLoader) {
-        try {
-            URLConnection connection = classLoader.getResource(path).openConnection();
-            return connection.getInputStream();
-        } catch (Exception e) {
-            LOGGER.error(IT, "### WARNING");
-            LOGGER.error(IT, "### CANNOT GET INPUT STREAM FROM OUR JAR RESOURCES, CHECK DEBUG.LOG FOR BETTER INFO");
-            if (LOGGER.isDebugEnabled()) LOGGER.debug(IT, "Exception trying to get InputStream", e);
-            else LOGGER.error(IT, "Exception trying to get InputStream", e);
-        }
-
-        return classLoader.getResourceAsStream(path);
+        InputStream stream = classLoader.getResourceAsStream(path);
+        if (stream == null && path.startsWith("/")) stream = classLoader.getResourceAsStream(path);
+        return stream;
     }
 
     /**

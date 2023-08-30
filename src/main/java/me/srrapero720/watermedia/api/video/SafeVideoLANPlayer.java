@@ -18,6 +18,7 @@ import java.awt.*;
 
 import static me.srrapero720.watermedia.WaterMedia.LOGGER;
 
+@Deprecated
 public class SafeVideoLANPlayer extends VideoPlayer {
     private static final Marker IT = MarkerFactory.getMarker("SafeVideoLanPlayer");
     private volatile CallbackMediaPlayerComponent player;
@@ -267,4 +268,3 @@ public class SafeVideoLANPlayer extends VideoPlayer {
         return new CallbackMediaPlayerComponent(factory, null, null, false, renderCallback, bufferFormatCallback, null);
     }
 }
-

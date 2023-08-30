@@ -1,7 +1,6 @@
 package me.srrapero720.watermedia;
 
 import me.srrapero720.watermedia.api.images.LocalStorage;
-import me.srrapero720.watermedia.core.lavaplayer.LavaCore;
 import me.srrapero720.watermedia.core.videolan.VideoLAN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +27,6 @@ public class WaterMedia {
 		// PREPARE VLC
 		LOGGER.info(IT, "Loading {}", VideoLAN.class.getSimpleName());
 		if (!VideoLAN.init(storageDirectory)) return false;
-
-		// PREPARE LAVAPLAYER
-		LOGGER.info(IT, "Loading {}", LavaCore.class.getSimpleName());
-        if (!LavaCore.init()) return false;
 
 		LOGGER.info(IT, "WaterMedia started successfully");
 		return true;
