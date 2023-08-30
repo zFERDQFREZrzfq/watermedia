@@ -32,6 +32,7 @@ import static me.srrapero720.watermedia.WaterMedia.LOGGER;
 public class Util {
     private static final Marker IT = MarkerFactory.getMarker("Util");
     public static final OsArch ARCH = getOsArch();
+    private static final Thread THREAD = Thread.currentThread();
 
     public static <T> Field getClassField(Class<? super T> from, String name) {
         try {
@@ -261,6 +262,10 @@ public class Util {
         public String toString() {
             return OS + "-" + ARCH;
         }
+    }
+
+    public static void checkIfCurrentThreadHaveClassLoader() {
+        if (Thread.currentThread().getContextClassLoader() == null) Thread.currentThread().setContextClassLoader(THREAD.getContextClassLoader());
     }
 
     public static String getUserAgentBasedOnOS() {

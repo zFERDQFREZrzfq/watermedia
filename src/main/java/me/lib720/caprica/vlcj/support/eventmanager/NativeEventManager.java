@@ -27,6 +27,7 @@ import me.lib720.caprica.vlcj.binding.internal.libvlc_event_e;
 import me.lib720.caprica.vlcj.binding.internal.libvlc_event_manager_t;
 import me.lib720.caprica.vlcj.binding.internal.libvlc_event_t;
 import me.lib720.caprica.vlcj.binding.internal.libvlc_instance_t;
+import me.srrapero720.watermedia.Util;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -174,6 +175,7 @@ abstract public class NativeEventManager<E,L> {
      * @param event event to raise, may be <code>null</code> and if so will be ignored
      */
     public final void raiseEvent(EventNotification<L> event) {
+        Util.checkIfCurrentThreadHaveClassLoader();
         if (event != null && !eventListenerList.isEmpty()) {
             for (L listener : eventListenerList) {
                  event.notify(listener);
@@ -197,12 +199,14 @@ abstract public class NativeEventManager<E,L> {
         private final CallbackThreadInitializer cti;
 
         private EventCallback() {
+            Util.checkIfCurrentThreadHaveClassLoader();
             this.cti = new CallbackThreadInitializer(true, false, callbackName);
             Native.setCallbackThreadInitializer(this, cti);
         }
 
         @Override
         public void callback(libvlc_event_t event, Pointer userData) {
+            Util.checkIfCurrentThreadHaveClassLoader();
             raiseEvent(onCreateEvent(libvlcInstance, event, eventObject));
         }
 

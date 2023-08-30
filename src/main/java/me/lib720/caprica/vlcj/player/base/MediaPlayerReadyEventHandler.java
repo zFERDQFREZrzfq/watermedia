@@ -21,6 +21,7 @@ package me.lib720.caprica.vlcj.player.base;
 
 import me.lib720.caprica.vlcj.media.MediaRef;
 import me.lib720.caprica.vlcj.player.base.events.MediaPlayerEventFactory;
+import me.srrapero720.watermedia.Util;
 
 /**
  * Event listener implementation that waits for the first position changed event and raises a synthetic media player
@@ -54,6 +55,7 @@ final class MediaPlayerReadyEventHandler extends MediaPlayerEventAdapter {
 
     @Override
     public void positionChanged(MediaPlayer mediaPlayer, float newPosition) {
+        Util.checkIfCurrentThreadHaveClassLoader();
         if (!fired && newPosition > 0) {
             fired = true;
             mediaPlayer.events().raiseEvent(MediaPlayerEventFactory.createMediaPlayerReadyEvent(mediaPlayer));
