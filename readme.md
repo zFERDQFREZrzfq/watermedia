@@ -1,4 +1,4 @@
-# WATERMeDIA | MEDIA API
-Mod to supply multimedia binaries and API to Minecraft modding <br>
+# WATERMeDIA | MULTIMEDIA API
 
-Still in development.
+## WARNING
+This version and branch was UNMAINTAINED
