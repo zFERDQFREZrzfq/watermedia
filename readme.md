@@ -5,7 +5,7 @@
 [![](https://jitpack.io/v/SrRapero720/watermedia.svg?style=flat-square)](https://jitpack.io/#SrRapero720/watermedia)
 
 # WARNING
-This branch is a deprecated version
+This branch is in a grace period
 switch to 2.0 or 'master' branch
 
 # WATERMeDIA | MULTIMEDIA API
@@ -16,6 +16,21 @@ API adds a VideoPlayer layer on VLC MediaPlayer to render frames into OpenGL.
 Tool to fetch images from the internet and store it in cache,
 ``URLFixer``'s to give extra support to streaming platforms like Twitch,
 Kick.com, YouTube, Google Drive, One Drive, Dropbox and more
+
+## VERSION STATUS
+| Version | Status |
+|:-------:|:------:|
+|  1.0.0  |   ⛔    |
+|  1.1.0  |   ⛔    |
+|  1.2.x  |   ⛔    |
+|  1.3.x  |   ⚠    |
+|  2.0.x  |   ✅    |
+
+
+**FLAGS**
+- ✅ **Latest**
+- ⚠ **Grace period**
+- ⛔ **Unmaintained**
 
 # INSTALLATION
 You can use two ways to install this mod in your project
