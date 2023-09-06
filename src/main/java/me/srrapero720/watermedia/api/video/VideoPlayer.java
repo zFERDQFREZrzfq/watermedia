@@ -24,6 +24,8 @@ public abstract class VideoPlayer {
     public abstract void setPauseMode(boolean isPaused);
     public abstract void stop();
 
+    public abstract boolean isSafeToUse();
+
 
     /* seekTo */
     public abstract void seekTo(long time);

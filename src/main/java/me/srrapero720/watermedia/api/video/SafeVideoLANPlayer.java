@@ -15,13 +15,20 @@ import org.slf4j.MarkerFactory;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static me.srrapero720.watermedia.WaterMedia.LOGGER;
 
+
+/**
+ * reworked
+ */
 @Deprecated
 public class SafeVideoLANPlayer extends VideoPlayer {
     private static final Marker IT = MarkerFactory.getMarker("SafeVideoLanPlayer");
     private volatile CallbackMediaPlayerComponent player;
+    private volatile boolean safe = true;
     public CallbackMediaPlayerComponent raw() { return player; }
 
     public SafeVideoLANPlayer(@Nullable MediaPlayerFactory factory, @Nullable RenderCallback renderCallback, @Nullable BufferFormatCallback bufferFormatCallback) {
@@ -37,8 +44,14 @@ public class SafeVideoLANPlayer extends VideoPlayer {
     public synchronized void start(CharSequence url, String[] vlcArgs) {
         if (player == null) return;
         ThreadUtil.threadTry(() -> {
-            super.start(url.toString());
-            player.mediaPlayer().media().start(this.url, vlcArgs);
+            synchronized (this) {
+                if (player == null) return;
+
+                safe = false;
+                super.start(url.toString());
+                player.mediaPlayer().media().start(this.url, vlcArgs);
+                safe = true;
+            }
         }, null, null);
     }
 
@@ -47,8 +60,14 @@ public class SafeVideoLANPlayer extends VideoPlayer {
     public void prepare(@NotNull CharSequence url, String[] vlcArgs) {
         if (player == null) return;
         ThreadUtil.threadTry(() -> {
-            super.start(url.toString());
-            player.mediaPlayer().media().prepare(this.url, vlcArgs);
+            synchronized (this) {
+                if (player == null) return;
+
+                safe = false;
+                super.start(url.toString());
+                if (player != null) player.mediaPlayer().media().prepare(this.url, vlcArgs);
+                safe = true;
+            }
         }, null, null);
     }
 
@@ -117,6 +136,11 @@ public class SafeVideoLANPlayer extends VideoPlayer {
 //        } else return player.mediaPlayer().media().isValid();
 
         return player.mediaPlayer().media().isValid();
+    }
+
+    @Override
+    public boolean isSafeToUse() {
+        return safe;
     }
 
     @Override
@@ -259,8 +283,23 @@ public class SafeVideoLANPlayer extends VideoPlayer {
     @Override
     public void release() {
         if (player == null) return;
-        player.mediaPlayer().release();
+
+        // FINISH IT
+        stop();
+
+        // CLEAR INSTANCE FROM PLAYER
+        var tempPlayer = player;
         player = null;
+
+        // RELEASE PLAYER
+        ThreadUtil.threadTryWithLowPrior(() -> {
+            synchronized (this) {
+                if (tempPlayer == null) return;
+
+                safe = false;
+                tempPlayer.mediaPlayer().release();
+            }
+        });
     }
 
 

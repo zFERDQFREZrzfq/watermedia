@@ -48,6 +48,23 @@ public class ThreadUtil {
         }
     }
 
+    public static Thread threadTryWithLowPrior(TryRunnable toTry) {
+        var thread = new Thread(() -> {
+            try {
+                toTry.run();
+            } catch (Exception e) {
+
+            }
+        });
+        thread.setName("WCoRE-worker-" + (++workers));
+        thread.setContextClassLoader(Thread.currentThread().getContextClassLoader());
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
+        thread.start();
+        return thread;
+    }
+
     public static void threadTry(@NotNull TryRunnable toTry, @Nullable CatchRunnable toCatch, @Nullable FinallyRunnable toFinally) {
         threadTryArgument(null, (object -> toTry.run()), toCatch, (object -> { if (toFinally != null) toFinally.run(); }));
     }

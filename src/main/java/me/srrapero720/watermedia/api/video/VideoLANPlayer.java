@@ -21,7 +21,11 @@ import org.slf4j.MarkerFactory;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.lang.ref.Reference;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static me.srrapero720.watermedia.WaterMedia.LOGGER;
@@ -29,11 +33,20 @@ import static me.srrapero720.watermedia.WaterMedia.LOGGER;
 @Deprecated(forRemoval = true)
 public class VideoLANPlayer extends VideoPlayer {
     private static final Thread THREAD = Thread.currentThread();
+    private static final ExecutorService EX = Executors.newSingleThreadExecutor(r -> {
+        var t = new Thread(r);
+        t.setPriority(Thread.MIN_PRIORITY);
+        t.setDaemon(true);
+        t.setName("WATERMeDIA-services");
+        t.setUncaughtExceptionHandler((t1, e) -> LOGGER.error("Failed to execute release service", e));
+        return t;
+    });
     private static final Marker IT = MarkerFactory.getMarker("VideoLanPlayer");
     private final AtomicBoolean buffering = new AtomicBoolean(false);
     private final AtomicBoolean prepared = new AtomicBoolean(false);
     private volatile int volume = 100;
     private volatile long duration = -1;
+    private volatile boolean safe = false;
     private volatile CallbackMediaPlayerComponent player;
     public final EventManager<VideoLANPlayer> EV = new EventManager<>();
 
@@ -50,6 +63,10 @@ public class VideoLANPlayer extends VideoPlayer {
 
         if (WaterMediaAPI.isVLCReady()) this.player = this.init(factory, renderCallback, bufferFormatCallback);
         else LOGGER.error(IT, "Failed to create CallbackMediaPlayerComponent because VLC is not loaded");
+
+        LOGGER.warn(IT, "Created a unsafe instance of a VideoLANPlayer");
+        LOGGER.warn(IT, "Please contact with the dependent mod developer");
+        LOGGER.warn(IT, "Things may not work well");
     }
 
     @Override
@@ -57,8 +74,14 @@ public class VideoLANPlayer extends VideoPlayer {
     public synchronized void start(CharSequence url, String[] vlcArgs) {
         if (player == null) return;
         ThreadUtil.threadTry(() -> {
-            super.start(url.toString());
-            player.mediaPlayer().media().start(this.url, vlcArgs);
+            synchronized (this) {
+                if (player == null) return;
+
+                safe = false;
+                super.start(url.toString());
+                player.mediaPlayer().media().start(this.url, vlcArgs);
+                safe = true;
+            }
         }, null, null);
     }
 
@@ -67,8 +90,14 @@ public class VideoLANPlayer extends VideoPlayer {
     public void prepare(@NotNull CharSequence url, String[] vlcArgs) {
         if (player == null) return;
         ThreadUtil.threadTry(() -> {
-            super.start(url.toString());
-            player.mediaPlayer().media().prepare(this.url, vlcArgs);
+            synchronized (this) {
+                if (player == null) return;
+
+                safe = false;
+                super.start(url.toString());
+                player.mediaPlayer().media().prepare(this.url, vlcArgs);
+                safe = true;
+            }
         }, null, null);
     }
 
@@ -139,6 +168,10 @@ public class VideoLANPlayer extends VideoPlayer {
         } else return player.mediaPlayer().media().isValid();
 
         return false;
+    }
+
+    public boolean isSafeToUse() {
+        return safe;
     }
 
     @Override
@@ -283,9 +316,28 @@ public class VideoLANPlayer extends VideoPlayer {
     @Override
     public void release() {
         if (player == null) return;
-        player.mediaPlayer().events().removeMediaPlayerEventListener(eventListeners);
-        player.mediaPlayer().release();
-        player = null;
+
+        // FINISH IT
+        stop();
+
+        // REMOVE PLAYER TO SKIP ANY EXTERNAL USAGE
+        var tempPlayer = player;
+        this.player = null;
+
+        // ENSURE RELEASE
+        EX.execute(() -> {
+            synchronized (this) {
+                safe = false;
+                if (tempPlayer == null) return;
+
+                tempPlayer.mediaPlayer().release();
+
+                try {
+                    Thread.sleep(250);
+                } catch (Exception ignored) {}
+                eventListeners.corked(null, false);
+            }
+        });
     }
 
     private void checkIfCurrentThreadHaveClassLoader() {
@@ -328,8 +380,11 @@ public class VideoLANPlayer extends VideoPlayer {
                 if (!prepared.get()) EV.callPlayerStartedEvent(VideoLANPlayer.this, new PlayerStartedEvent.EventData());
                 else EV.callMediaResumeEvent(VideoLANPlayer.this, new MediaResumeEvent.EventData(player.mediaPlayer().status().length()));
 
-                mediaPlayer.audio().setVolume(volume);
+
             }
+            mediaPlayer.submit(() -> {
+                mediaPlayer.audio().setVolume(volume);
+            });
         }
 
         @Override
@@ -460,8 +515,9 @@ public class VideoLANPlayer extends VideoPlayer {
             prepared.set(true);
             EV.callPlayerReadyEvent(VideoLANPlayer.this, new PlayerReadyEvent.EventData());
 
-            synchronized (EV) { mediaPlayer.audio().setVolume(volume); }
+            mediaPlayer.submit(() -> {
+                mediaPlayer.audio().setVolume(volume);
+            });
         }
     };
 }
-
