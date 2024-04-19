@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.MessageDigest;
+import java.nio.charset.StandardCharsets;
 
 import static me.srrapero720.watermedia.WaterMedia.LOGGER;
 
@@ -73,7 +76,15 @@ public class CacheCore {
     }
 
     private static File entry$getFile(String url) {
-        return new File(dir, Base64.getEncoder().encodeToString(url.getBytes()));
+    	try
+    	{
+    	    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+          return new File(dir, org.apache.commons.codec.binary.Hex.encodeHexString(digest.digest(url.getBytes(StandardCharsets.UTF_8))));
+    	}
+    	catch (java.security.NoSuchAlgorithmException e) { LOGGER.error(IT, "Failed to initalize digest", e); }
+    
+    	// Fallback to old naming
+    	return new File(dir, Base64.getEncoder().encodeToString(url.getBytes()));
     }
 
     public static void saveFile(String url, String tag, long time, long expireTime, byte[] data) {
